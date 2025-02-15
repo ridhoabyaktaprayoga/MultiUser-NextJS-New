@@ -78,3 +78,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - **Running the Development Server**:  
   Instructions remain the same, allowing users to start the development server quickly.
 
+<<<<<<< HEAD
+Feel free to adjust the repository URL, package names, or any text as needed for your project.
+=======
+Feel free to adjust the repository URL, package names, or any text as needed for your project.
+>>>>>>> 6e70c196a26b763a3ae3c9874668625ade52d145
