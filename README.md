@@ -15,13 +15,6 @@ yarn
 pnpm install
 ```
 
-This project uses several additional packages that are required for authentication and alerts:
-
-- **bcrypt**: for hashing passwords.
-- **jsonwebtoken**: for generating and verifying JSON Web Tokens.
-- **sweetalert2**: for displaying elegant alert and confirmation dialogs.
-- **prisma**: for database interactions (with Prisma Client).
-- **next/font**: to automatically optimize and load fonts.
 
 If any of these packages are missing or you need to update them, you can install them using:
 
