@@ -1,4 +1,3 @@
-
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -15,6 +14,13 @@ yarn
 pnpm install
 ```
 
+This project uses several additional packages that are required for authentication and alerts:
+
+- **bcrypt**: for hashing passwords.
+- **jsonwebtoken**: for generating and verifying JSON Web Tokens.
+- **sweetalert2**: for displaying elegant alert and confirmation dialogs.
+- **prisma**: for database interactions (with Prisma Client).
+- **next/font**: to automatically optimize and load fonts.
 
 If any of these packages are missing or you need to update them, you can install them using:
 
@@ -71,9 +77,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - **Running the Development Server**:  
   Instructions remain the same, allowing users to start the development server quickly.
-
-<<<<<<< HEAD
-Feel free to adjust the repository URL, package names, or any text as needed for your project.
-=======
-Feel free to adjust the repository URL, package names, or any text as needed for your project.
->>>>>>> 6e70c196a26b763a3ae3c9874668625ade52d145
