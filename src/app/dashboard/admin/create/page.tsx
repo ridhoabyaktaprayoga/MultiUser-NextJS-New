@@ -4,34 +4,35 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-export default function CreateProduct() {
+export default function CreateBook() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
   const [price, setPrice] = useState("");
+  const [description, setDescription] = useState(""); // Tambahkan state description
 
-  // Tambahkan produk baru
-  const addProduct = async () => {
-    if (!name || !description || !price) {
+  // Tambahkan buku baru
+  const addBook = async () => {
+    if (!title || !author || !price || !description) {
       Swal.fire("Error", "All fields are required!", "error");
       return;
     }
 
     try {
-      const res = await fetch("/api/products", {
+      const res = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, description, price: parseFloat(price) }),
+        body: JSON.stringify({ title, author, price: parseFloat(price), description }), // Tambahkan description
       });
 
-      if (!res.ok) throw new Error("Failed to add product");
+      if (!res.ok) throw new Error("Failed to add book");
 
-      Swal.fire("Success", "Product added!", "success").then(() => {
+      Swal.fire("Success", "Book added!", "success").then(() => {
         router.push("/dashboard/admin");
       });
     } catch (error) {
-      console.error("Error adding product:", error);
-      Swal.fire("Error", "Failed to add product.", "error");
+      console.error("Error adding book:", error);
+      Swal.fire("Error", "Failed to add book.", "error");
     }
   };
 
@@ -46,19 +47,19 @@ export default function CreateProduct() {
       </button>
 
       <div className="bg-white shadow rounded p-6 w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
+        <h1 className="text-2xl font-bold mb-4">Add New Book</h1>
 
         <input
           className="border p-2 w-full mb-2"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Product Name"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Book Title"
         />
-        <textarea
+        <input
           className="border p-2 w-full mb-2"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          placeholder="Author"
         />
         <input
           className="border p-2 w-full mb-2"
@@ -67,11 +68,17 @@ export default function CreateProduct() {
           placeholder="Price"
           type="number"
         />
+        <textarea
+          className="border p-2 w-full mb-2"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description" // Tambahkan input untuk description
+        />
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full"
-          onClick={addProduct}
+          onClick={addBook}
         >
-          Add Product
+          Add Book
         </button>
       </div>
     </div>

@@ -4,32 +4,33 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-interface Product {
+interface Book {
   id: string;
-  name: string;
-  description: string;
+  title: string;
+  author: string;
   price: number;
+  description: string; // Tambahkan field description
 }
 
 export default function UserDashboard() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
-    fetchProducts();
+    fetchBooks();
     updateCartCount();
   }, []);
 
-  // Ambil daftar produk dari API
-  const fetchProducts = async () => {
+  // Ambil daftar buku dari API
+  const fetchBooks = async () => {
     try {
-      const res = await fetch("/api/products");
-      if (!res.ok) throw new Error("Failed to fetch products");
+      const res = await fetch("/api/books");
+      if (!res.ok) throw new Error("Failed to fetch books");
       const data = await res.json();
-      setProducts(data);
+      setBooks(data);
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error("Error fetching books:", error);
     }
   };
 
@@ -39,13 +40,13 @@ export default function UserDashboard() {
     setCartCount(storedCart.length);
   };
 
-  // Tambahkan produk ke keranjang
-  const addToCart = (product: Product) => {
+  // Tambahkan buku ke keranjang
+  const addToCart = (book: Book) => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    storedCart.push(product);
+    storedCart.push(book);
     localStorage.setItem("cart", JSON.stringify(storedCart));
     setCartCount(storedCart.length);
-    Swal.fire("Added!", `${product.name} has been added to your cart.`, "success");
+    Swal.fire("Added!", `${book.title} has been added to your cart.`, "success");
   };
 
   // Fungsi logout
@@ -60,13 +61,12 @@ export default function UserDashboard() {
       confirmButtonText: "Yes, logout!",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Hapus token dan data dari localStorage
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         localStorage.removeItem("cart");
         localStorage.removeItem("token");
 
         Swal.fire("Logged out!", "You have been logged out.", "success").then(() => {
-          router.push("/login"); // Redirect ke login
+          router.push("/login");
         });
       }
     });
@@ -76,7 +76,7 @@ export default function UserDashboard() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
       <div className="bg-white shadow rounded p-6 w-full max-w-2xl text-center relative">
         <h1 className="text-3xl font-bold mb-4">Welcome, User!</h1>
-        <p className="text-gray-700 mb-4">Browse and add products to your cart.</p>
+        <p className="text-gray-700 mb-4">Browse and add books to your cart.</p>
 
         {/* Icon Keranjang */}
         <button
@@ -86,23 +86,24 @@ export default function UserDashboard() {
           🛒 Cart ({cartCount})
         </button>
 
-        {/* Daftar Produk */}
+        {/* Daftar Buku */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold mb-2">Products</h2>
+          <h2 className="text-xl font-bold mb-2">Books</h2>
           <ul className="w-full">
-            {products.length === 0 ? (
-              <p className="text-gray-500">No products available.</p>
+            {books.length === 0 ? (
+              <p className="text-gray-500">No books available.</p>
             ) : (
-              products.map((product) => (
-                <li key={product.id} className="mb-4 border p-3 text-left">
-                  <h3 className="font-bold">{product.name}</h3>
-                  <p>{product.description}</p>
-                  <p className="text-green-600 font-semibold">Price: ${product.price}</p>
+              books.map((book) => (
+                <li key={book.id} className="mb-4 border p-3 text-left">
+                  <h3 className="font-bold">{book.title}</h3>
+                  <p><strong>Author:</strong> {book.author}</p>
+                  <p className="text-green-600 font-semibold">Price: ${book.price}</p>
+                  <p className="text-gray-700">{book.description}</p> {/* Tambahkan deskripsi */}
                   <button
                     className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-1 px-2 rounded mt-2"
-                    onClick={() => addToCart(product)}
+                    onClick={() => addToCart(book)}
                   >
-                    Add to Cart 🛍️
+                    Add to Cart 📚
                   </button>
                 </li>
               ))

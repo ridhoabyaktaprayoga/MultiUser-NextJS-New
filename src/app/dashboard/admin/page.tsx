@@ -4,33 +4,36 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-interface Product {
+interface Book {
   id: string;
-  name: string;
-  description: string;
+  title: string;
+  author: string;
   price: number;
+  description: string; // Tambahkan description
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    fetchProducts();
+    fetchBooks();
   }, []);
 
-  // Ambil daftar produk dari API
-  const fetchProducts = async () => {
-    const res = await fetch("/api/products");
+  // Ambil daftar buku dari API
+  const fetchBooks = async () => {
+    const res = await fetch("/api/books");
     const data = await res.json();
-    setProducts(data);
+    setBooks(data);
   };
 
-  // Hapus produk berdasarkan ID
-  const deleteProduct = async (id: string) => {
+  // Hapus buku berdasarkan ID
+  const deleteBook = async (id: string) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This product will be deleted permanently!",
+      text: "This book will be deleted permanently!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
@@ -38,9 +41,9 @@ export default function AdminDashboard() {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await fetch(`/api/products/${id}`, { method: "DELETE" });
-        Swal.fire("Deleted!", "Product has been deleted.", "success");
-        fetchProducts();
+        await fetch(`/api/books/${id}`, { method: "DELETE" });
+        Swal.fire("Deleted!", "Book has been deleted.", "success");
+        fetchBooks();
       }
     });
   };
@@ -70,32 +73,33 @@ export default function AdminDashboard() {
       <div className="bg-white shadow rounded p-6 w-full max-w-2xl text-center">
         <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
 
-        {/* Tombol Tambah Produk */}
+        {/* Tombol Tambah Buku */}
         <button
           onClick={() => router.push("/dashboard/admin/create")}
           className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded mb-4"
         >
-          + Add New Product
+          + Add New Book
         </button>
 
-        {/* Daftar Produk */}
+        {/* Daftar Buku */}
         <ul className="w-full">
-          {products.map((product) => (
-            <li key={product.id} className="mb-4 border p-3 text-left flex justify-between">
+          {books.map((book) => (
+            <li key={book.id} className="mb-4 border p-3 text-left flex justify-between">
               <div>
-                <h3 className="font-bold">{product.name}</h3>
-                <p>{product.description}</p>
-                <p className="text-green-600 font-semibold">Price: ${product.price}</p>
+                <h3 className="font-bold">{book.title}</h3>
+                <p>Author: {book.author}</p>
+                <p className="text-green-600 font-semibold">Price: ${book.price}</p>
+                <p className="text-gray-700">Description: {book.description}</p> {/* Tambahkan tampilan description */}
               </div>
               <div>
                 <button
-                  onClick={() => router.push(`/dashboard/admin/edit/${product.id}`)}
+                  onClick={() => router.push(`/dashboard/admin/edit/${book.id}`)}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-2 rounded mr-2"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => deleteProduct(product.id)}
+                  onClick={() => deleteBook(book.id)}
                   className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded"
                 >
                   Delete
