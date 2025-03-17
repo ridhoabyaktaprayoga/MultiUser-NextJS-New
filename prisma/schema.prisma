@@ -28,16 +28,12 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Book {
+model Product {
   id          String   @id @default(uuid())
-  title       String
-  author      String
-  description String   @default("No description provided")
+  name        String
+  description String
   price       Float
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
-
-
 
 

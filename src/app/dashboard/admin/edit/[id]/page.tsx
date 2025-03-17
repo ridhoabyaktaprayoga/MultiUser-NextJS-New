@@ -5,55 +5,53 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Swal from "sweetalert2";
 
-export default function EditBook() {
+export default function EditProduct() {
   const router = useRouter();
   const { id } = useParams();
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [description, setDescription] = useState(""); // Tambahkan state description
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBook();
+    fetchProduct();
   }, []);
 
-  // Ambil data buku berdasarkan ID
-  const fetchBook = async () => {
+  // Ambil data produk berdasarkan ID
+  const fetchProduct = async () => {
     try {
-      const res = await fetch(`/api/books/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch book");
+      const res = await fetch(`/api/products/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch product");
 
-      const book = await res.json();
-      setTitle(book.title);
-      setAuthor(book.author);
-      setPrice(book.price);
-      setDescription(book.description); // Set deskripsi dari API
+      const product = await res.json();
+      setName(product.name);
+      setDescription(product.description);
+      setPrice(product.price);
     } catch (error) {
-      console.error("Error fetching book:", error);
-      Swal.fire("Error", "Failed to load book details.", "error");
+      console.error("Error fetching product:", error);
+      Swal.fire("Error", "Failed to load product details.", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // Simpan perubahan buku
-  const updateBook = async () => {
+  // Simpan perubahan produk
+  const updateProduct = async () => {
     try {
-      const res = await fetch(`/api/books/${id}`, {
+      const res = await fetch(`/api/products/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, author, price: parseFloat(price), description }), // Tambahkan description
+        body: JSON.stringify({ name, description, price: parseFloat(price) }),
       });
 
-      if (!res.ok) throw new Error("Failed to update book");
+      if (!res.ok) throw new Error("Failed to update product");
 
-      Swal.fire("Success", "Book updated!", "success").then(() => {
+      Swal.fire("Success", "Product updated!", "success").then(() => {
         router.push("/dashboard/admin");
       });
     } catch (error) {
-      console.error("Error updating book:", error);
-      Swal.fire("Error", "Failed to update book.", "error");
+      console.error("Error updating product:", error);
+      Swal.fire("Error", "Failed to update product.", "error");
     }
   };
 
@@ -68,23 +66,23 @@ export default function EditBook() {
       </button>
 
       <div className="bg-white shadow rounded p-6 w-full max-w-md text-center">
-        <h1 className="text-2xl font-bold mb-4">Edit Book</h1>
+        <h1 className="text-2xl font-bold mb-4">Edit Product</h1>
 
         {loading ? (
-          <p className="text-gray-500">Loading book details...</p>
+          <p className="text-gray-500">Loading product details...</p>
         ) : (
           <>
             <input
               className="border p-2 w-full mb-2"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Book Title"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Product Name"
             />
-            <input
+            <textarea
               className="border p-2 w-full mb-2"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-              placeholder="Author"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Product Description"
             />
             <input
               className="border p-2 w-full mb-2"
@@ -93,17 +91,11 @@ export default function EditBook() {
               type="number"
               placeholder="Price"
             />
-            <textarea
-              className="border p-2 w-full mb-2"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description" // Tambahkan input untuk description
-            />
             <button
               className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded w-full"
-              onClick={updateBook}
+              onClick={updateProduct}
             >
-              Update Book
+              Update Product
             </button>
           </>
         )}

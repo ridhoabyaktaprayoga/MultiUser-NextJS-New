@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Swal from "sweetalert2";
 
 export default function LoginPage() {
@@ -21,7 +20,9 @@ export default function LoginPage() {
 
     const data = await res.json();
     if (res.ok) {
+      // Simpan token di cookie
       document.cookie = `token=${data.token}; path=/;`;
+      // Tampilkan SweetAlert sukses
       Swal.fire({
         icon: "success",
         title: "Login Successful",
@@ -29,9 +30,11 @@ export default function LoginPage() {
         timer: 1500,
         showConfirmButton: false,
       }).then(() => {
+        // Redirect berdasarkan role
         router.push(data.role === "ADMIN" ? "/dashboard/admin" : "/dashboard/user");
       });
     } else {
+      // Tampilkan SweetAlert error
       Swal.fire({
         icon: "error",
         title: "Login Failed",
@@ -76,12 +79,6 @@ export default function LoginPage() {
           Login
         </button>
       </form>
-      <p className="mt-4 text-center">
-        Belum punya akun?{" "}
-        <Link href="/register" className="text-blue-500 hover:underline">
-          Daftar di sini
-        </Link>
-      </p>
     </div>
   );
 }
