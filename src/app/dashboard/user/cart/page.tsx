@@ -4,24 +4,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-interface Book {
+interface Product {
   id: string;
-  title: string;
-  author: string;
+  name: string;
   price: number;
-  description: string; // Tambahkan field description
 }
 
 export default function CartPage() {
   const router = useRouter();
-  const [cart, setCart] = useState<Book[]>([]);
+  const [cart, setCart] = useState<Product[]>([]);
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
     setCart(storedCart);
   }, []);
 
-  // Hapus buku dari keranjang
+  // Hapus produk dari keranjang
   const removeFromCart = (index: number) => {
     const updatedCart = [...cart];
     updatedCart.splice(index, 1);
@@ -74,13 +72,12 @@ export default function CartPage() {
       ) : (
         <ul className="w-full max-w-md">
           {cart.map((item, index) => (
-            <li key={index} className="mb-4 border p-4 flex flex-col">
-              <h3 className="font-bold">{item.title}</h3>
-              <p><strong>Author:</strong> {item.author}</p>
-              <p className="text-gray-600">{item.description}</p> {/* Tambahkan deskripsi */}
-              <p className="text-green-600 font-semibold">Price: ${item.price}</p>
+            <li key={index} className="mb-2 border p-2 flex justify-between items-center">
+              <span>
+                {item.name} - ${item.price}
+              </span>
               <button
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded mt-2 self-end"
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded"
                 onClick={() => removeFromCart(index)}
               >
                 Remove

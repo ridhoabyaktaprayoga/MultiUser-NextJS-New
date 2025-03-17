@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-blue-500 p-4 flex justify-between items-center">
-      <h1 className="text-white text-xl font-bold">Book Shop</h1>
+      <h1 className="text-white text-xl font-bold">Online Shop</h1>
       <div className="relative">
         <button onClick={() => router.push("/dashboard/user/cart")}>
           🛒
