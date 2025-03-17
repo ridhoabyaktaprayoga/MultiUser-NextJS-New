@@ -4,23 +4,23 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
-  const product = await prisma.product.findUnique({ where: { id: params.id } });
-  if (!product) return NextResponse.json({ message: "Not Found" }, { status: 404 });
+  const book = await prisma.book.findUnique({ where: { id: params.id } });
+  if (!book) return NextResponse.json({ message: "Not Found" }, { status: 404 });
 
-  return NextResponse.json(product);
+  return NextResponse.json(book);
 }
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const { name, description, price } = await req.json();
-  const updatedProduct = await prisma.product.update({
+  const { title, author, price, description } = await req.json();
+  const updatedBook = await prisma.book.update({
     where: { id: params.id },
-    data: { name, description, price },
+    data: { title, author, price, description },
   });
 
-  return NextResponse.json(updatedProduct);
+  return NextResponse.json(updatedBook);
 }
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  await prisma.product.delete({ where: { id: params.id } });
+  await prisma.book.delete({ where: { id: params.id } });
   return NextResponse.json({ message: "Deleted" });
 }

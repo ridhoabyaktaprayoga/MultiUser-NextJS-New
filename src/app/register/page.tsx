@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Swal from "sweetalert2";
 
 export default function RegisterPage() {
@@ -21,7 +22,6 @@ export default function RegisterPage() {
 
     const data = await res.json();
     if (res.ok) {
-      // Tampilkan SweetAlert ketika registrasi berhasil
       Swal.fire({
         icon: "success",
         title: "Registration Successful",
@@ -85,6 +85,12 @@ export default function RegisterPage() {
           Register
         </button>
       </form>
+      <p className="mt-4 text-center">
+        Sudah punya akun?{" "}
+        <Link href="/login" className="text-blue-500 hover:underline">
+          Login di sini
+        </Link>
+      </p>
     </div>
   );
 }
