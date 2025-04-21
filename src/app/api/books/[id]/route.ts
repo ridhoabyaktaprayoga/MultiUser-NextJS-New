@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { prisma } from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
@@ -56,3 +57,31 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: "Failed to delete book" }, { status: 400, headers: corsHeaders });
   }
 }
+=======
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+  const book = await prisma.book.findUnique({ where: { id: params.id } });
+  if (!book) return NextResponse.json({ message: "Not Found" }, { status: 404 });
+
+  return NextResponse.json(book);
+}
+
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  const { title, author, price, description } = await req.json();
+  const updatedBook = await prisma.book.update({
+    where: { id: params.id },
+    data: { title, author, price, description },
+  });
+
+  return NextResponse.json(updatedBook);
+}
+
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+  await prisma.book.delete({ where: { id: params.id } });
+  return NextResponse.json({ message: "Deleted" });
+}
+>>>>>>> 1c53abac87371bee113eff02548f880dd7ef961b
