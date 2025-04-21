@@ -4,36 +4,52 @@ import { NextResponse, NextRequest } from "next/server";
 
 // Middleware CORS
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*", // Bisa diganti dengan domain spesifik
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-// Handle permintaan OPTIONS (Preflight Request)
+// OPTIONS handler (Preflight request)
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-// GET: Ambil semua buku
+// GET: Get all books
 export async function GET() {
   try {
     const books = await prisma.book.findMany();
     return NextResponse.json(books, { headers: corsHeaders });
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500, headers: corsHeaders });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500, headers: corsHeaders }
+    );
   }
 }
 
-// POST: Tambah buku baru
+// POST: Create a new book
 export async function POST(req: NextRequest) {
   try {
-    const { title, author, price, description } = await req.json();
+    const body = await req.json();
+    const { title, author, price, description } = body;
+
+    // Optional validation
+    if (!title || !author || price === undefined || !description) {
+      return NextResponse.json(
+        { error: "All fields are required" },
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
     const newBook = await prisma.book.create({
       data: { title, author, price, description },
     });
 
     return NextResponse.json(newBook, { status: 201, headers: corsHeaders });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to create book" }, { status: 400, headers: corsHeaders });
+    return NextResponse.json(
+      { error: "Failed to create book" },
+      { status: 400, headers: corsHeaders }
+    );
   }
 }
